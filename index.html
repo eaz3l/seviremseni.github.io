@@ -1,0 +1,1103 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="A personalized love story adventure.">
+    <meta name="theme-color" content="#8B0000">
+    <title>Our Love Story</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&family=Great+Vibes&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #d32f2f;
+            --secondary-color: #ffcdd2;
+            --accent-color: #ffd700;
+            --bg-color: #fff0f5;
+            --text-color: #4a0404;
+            --glass-bg: rgba(255, 255, 255, 0.8);
+            --card-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            --font-heading: 'Playfair Display', serif;
+            --font-body: 'Lato', sans-serif;
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #ff4081;
+            --secondary-color: #2c000e;
+            --accent-color: #ffd700;
+            --bg-color: #1a0509;
+            --text-color: #ffebee;
+            --glass-bg: rgba(40, 0, 10, 0.8);
+            --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.7);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            background: var(--glass-bg);
+            padding: 2rem;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: var(--card-shadow);
+            text-align: center;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid var(--secondary-color);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-20px) rotate(5deg);
+            }
+
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+        }
+
+        /* Hero Section */
+        #hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+        }
+
+        [data-theme="dark"] #hero {
+            background: linear-gradient(135deg, #2b000b 0%, #4a0010 100%);
+        }
+
+        .aurora-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, rgba(255, 0, 100, 0.1), transparent 70%);
+            animation: pulse 10s infinite alternate;
+            z-index: 1;
+        }
+
+        #heart-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+        }
+
+        .hero-content {
+            z-index: 3;
+            text-align: center;
+            padding: 2rem;
+            backdrop-filter: blur(2px);
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        h1 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 4rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-primary,
+        .btn-secondary {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            background: var(--primary-color);
+            color: white;
+            box-shadow: 0 4px 15px rgba(211, 47, 47, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(211, 47, 47, 0.5);
+        }
+
+        .btn-secondary {
+            background: var(--bg-color);
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        /* Timeline */
+        .section {
+            min-height: 100vh;
+            /* Using min-height to ensure sections fill the screen */
+            padding: 4rem 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            /* Add logic to create spacing if content is short */
+            justify-content: center;
+        }
+
+        .timeline-container {
+            width: 100%;
+            max-width: 800px;
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .timeline-item {
+            background: var(--glass-bg);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: var(--card-shadow);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+            border-left: 4px solid var(--primary-color);
+            margin-left: 20px;
+            /* Indent for the timeline line */
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: '❤️';
+            position: absolute;
+            left: -34px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--bg-color);
+            border-radius: 50%;
+            padding: 5px;
+            border: 2px solid var(--primary-color);
+        }
+
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Gift Box 3D */
+        .gift-container {
+            perspective: 1000px;
+            width: 200px;
+            height: 200px;
+            margin-top: 2rem;
+            cursor: pointer;
+        }
+
+        .gift-box {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 1s;
+            animation: float 3s infinite ease-in-out;
+        }
+
+        .gift-body {
+            width: 100%;
+            height: 100%;
+            background: var(--primary-color);
+            position: absolute;
+            bottom: 0;
+            transform: rotateX(0deg);
+            /* Base state */
+        }
+
+        .gift-lid {
+            width: 110%;
+            /* Slightly larger lid */
+            height: 20%;
+            /* Lid height */
+            background: #ff5252;
+            /* Slightly lighter red */
+            position: absolute;
+            top: -10%;
+            /* Sit on top */
+            left: -5%;
+            transform-origin: top;
+            transition: transform 1s;
+            z-index: 10;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Simple visual representation for CSS-only 3D is tricky without many divs. 
+   Simplifying to a 2.5D interactive card flip or open animation for robustness 
+   across browsers without complex transforms that might break */
+        .gift-box.open .gift-lid {
+            transform: rotateX(-120deg) translateY(-50px);
+        }
+
+        .gift-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 80%;
+            background: #fff;
+            padding: 1rem;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            transition: transform 0.5s 0.5s;
+            /* Delay for lid opening */
+            z-index: 5;
+            pointer-events: none;
+            color: #333;
+        }
+
+        .gift-box.open .gift-content {
+            transform: translate(-50%, -150%) scale(1);
+            /* Pop out and up */
+            pointer-events: auto;
+        }
+
+        /* Utility */
+        .hidden {
+            display: none !important;
+        }
+
+        #theme-toggle,
+        #music-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: var(--glass-bg);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: var(--card-shadow);
+        }
+
+        #music-toggle {
+            top: 80px;
+        }
+
+        /* E-Card */
+        .ecard {
+            background: linear-gradient(135deg, #fff0f5 0%, #fff 100%);
+            padding: 2rem;
+            border: 8px solid var(--primary-color);
+            border-radius: 10px;
+            text-align: center;
+            max-width: 400px;
+            margin: 0 auto 2rem;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ecard::after {
+            content: '💘';
+            font-size: 10rem;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0.05;
+            pointer-events: none;
+        }
+
+        /* Quiz Styles */
+        .card {
+            background: var(--glass-bg);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .quiz-option {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.5);
+            border: 2px solid transparent;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--primary-color);
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        [data-theme="dark"] .quiz-option {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        /* Bloom Easter Egg */
+        .bloom-hidden {
+            opacity: 0;
+            pointer-events: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 100vw;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.9);
+            transition: opacity 1s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .bloom-active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        #flower-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .bloom-msg {
+            z-index: 101;
+            text-align: center;
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 3rem;
+            }
+
+            h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="loading-screen" aria-hidden="false">
+        <div class="heart-loader"></div>
+        <p id="loading-text">Weaving magic...</p>
+    </div>
+
+    <!-- Setup Modal -->
+    <div id="setup-modal" class="modal active" role="dialog" aria-modal="true" aria-labelledby="setup-title">
+        <div class="modal-content">
+            <h2 id="setup-title">Begin Your Story</h2>
+            <form id="setup-form">
+                <div class="input-group">
+                    <label for="partner1">Your Name</label>
+                    <input type="text" id="partner1" required placeholder="Name">
+                </div>
+                <div class="input-group">
+                    <label for="partner2">Partner's Name</label>
+                    <input type="text" id="partner2" required placeholder="Name">
+                </div>
+                <div class="input-group">
+                    <label for="startDate">Love Began On</label>
+                    <input type="date" id="startDate" required>
+                </div>
+                <button type="submit" class="btn-primary">Create Magic ✨</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main id="app" class="hidden">
+        <button id="theme-toggle" aria-label="Toggle Dark Mode">🌙</button>
+        <button id="music-toggle" aria-label="Toggle Music">🎵</button>
+
+        <section id="hero" class="section">
+            <canvas id="heart-canvas"></canvas>
+            <div class="hero-content">
+                <h1 class="glow-text">Happy Valentine's Day</h1>
+                <h2 id="couple-names"></h2>
+                <p id="time-together" class="subtitle"></p>
+                <div class="scroll-indicator">
+                    <span>❤️</span>
+                </div>
+            </div>
+            <div class="aurora-bg"></div>
+        </section>
+
+        <section id="timeline" class="section">
+            <h2>Our Journey</h2>
+            <div class="timeline-container" id="timeline-list">
+                <!-- Dynamically populated -->
+            </div>
+            <button id="add-memory-btn" class="btn-secondary">+ Add Memory</button>
+        </section>
+
+        <section id="quiz" class="section">
+            <h2>Love Quiz</h2>
+            <div id="quiz-container" class="card">
+                <div id="quiz-question"></div>
+                <div id="quiz-options"></div>
+                <div id="quiz-result" class="hidden"></div>
+            </div>
+        </section>
+
+        <section id="gift" class="section">
+            <h2>A Gift For You</h2>
+            <div class="gift-container">
+                <div class="gift-box" id="gift-box">
+                    <div class="gift-lid"></div>
+                    <div class="gift-body"></div>
+                    <div class="gift-bow"></div>
+                    <div class="gift-content">
+                        <p id="ai-poem" class="poem-text"></p>
+                    </div>
+                </div>
+                <p class="instruction">Tap to open</p>
+            </div>
+        </section>
+
+        <section id="bloom" class="section bloom-hidden">
+            <canvas id="flower-canvas"></canvas>
+            <div class="bloom-msg">
+                <h3>Our Love Blooms</h3>
+                <p>Use "Shake" gesture on mobile or click below!</p>
+                <button id="bloom-btn" class="btn-primary">Bloom 🌸</button>
+            </div>
+        </section>
+
+        <section id="share" class="section">
+            <h2>Share Our Love</h2>
+            <div id="ecard" class="ecard">
+                <h3 id="ecard-title">Variable Love</h3>
+                <p id="ecard-msg">Celebrating our connection.</p>
+                <div id="ecard-footer">Forever & Always</div>
+                <div id="qrcode"></div>
+            </div>
+            <button id="download-btn" class="btn-primary">Download Card 📸</button>
+        </section>
+
+        <footer>
+            <p>Made with ❤️ by <span class="ai-artisan">AI Artisan</span></p>
+            <p id="footer-confetti-trigger" style="cursor: pointer;">✨</p>
+        </footer>
+    </main>
+
+    <!-- Audio -->
+    <audio id="bg-music" loop>
+        <!-- Placeholder - a simple generated tone or silence for now, logic will handle synthesis/base64 -->
+    </audio>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // State
+            const state = {
+                partner1: '',
+                partner2: '',
+                startDate: null,
+                musicPlaying: false,
+                theme: 'light',
+                language: 'en'
+            };
+
+            // DOM Elements
+            const elements = {
+                setupModal: document.getElementById('setup-modal'),
+                setupForm: document.getElementById('setup-form'),
+                app: document.getElementById('app'),
+                hero: document.getElementById('hero'),
+                coupleNames: document.getElementById('couple-names'),
+                timeTogether: document.getElementById('time-together'),
+                timelineList: document.getElementById('timeline-list'),
+                musicToggle: document.getElementById('music-toggle'),
+                themeToggle: document.getElementById('theme-toggle'),
+                quizContainer: document.getElementById('quiz-container'),
+                giftBox: document.getElementById('gift-box'),
+                aiPoem: document.getElementById('ai-poem'),
+                bloomSection: document.getElementById('bloom'),
+                bloomBtn: document.getElementById('bloom-btn'),
+                flowerCanvas: document.getElementById('flower-canvas')
+            };
+
+            // Localization
+            const translations = {
+                en: {
+                    title: "Begin Your Story",
+                    p1Label: "Your Name",
+                    p2Label: "Partner's Name",
+                    dateLabel: "Love Began On",
+                    btnCreate: "Create Magic ✨",
+                    heroTitle: "Happy Valentine's Day",
+                    journeyTitle: "Our Journey",
+                    addMemory: "+ Add Memory",
+                    quizTitle: "Love Quiz",
+                    giftTitle: "A Gift For You",
+                    tapOpen: "Tap to open",
+                    bloomTitle: "Our Love Blooms",
+                    bloomMsg: "Use \"Shake\" gesture on mobile or click below!",
+                    bloomBtn: "Bloom 🌸",
+                    shareTitle: "Share Our Love",
+                    downloadBtn: "Download Card 📸",
+                    footer: "Made with ❤️ by AI Artisan",
+                    loading: "Weaving magic...",
+                    timeFormat: "years and %days% days",
+                    timeline: [
+                        { title: "First Met", desc: "The moment our worlds collided.", icon: "✨" },
+                        { title: "First Date", desc: "Butterflies and endless conversation.", icon: "🥂" },
+                        { title: "Falling in Love", desc: "Realizing you were the one.", icon: "💘" },
+                        { title: "Today", desc: "Celebrating our unique story.", icon: "🌹" }
+                    ],
+                    questions: [
+                        { q: "What's your favorite thing to do together?", options: ["Travel", "Cuddle", "Eat", "Adventure"] },
+                        { q: "Which word describes us best?", options: ["Passionate", "Goofy", "Soulmates", "Unstoppable"] },
+                        { q: "Where is our dream date?", options: ["Beach", "Mountain", "City", "Home"] }
+                    ],
+                    poemTemplates: [
+                        "In a world of chaos, %p2% is my calm,\nA soothing melody, a healing balm.\nSince %date%, my heart has known,\nThat with you, I am never alone.",
+                        "Roses are red, violets are blue,\nNo one makes me smile like %p2% do.\n%p1% loves you, through and through."
+                    ],
+                    quizResult: "You two are a match made in the stars! 100% Compatible."
+                },
+                tr: {
+                    title: "Hikayenize Başlayın",
+                    p1Label: "Adınız",
+                    p2Label: "Partnerinizin Adı",
+                    dateLabel: "Aşkın Başlangıcı",
+                    btnCreate: "Sihri Yarat ✨",
+                    heroTitle: "Sevgililer Günün Kutlu Olsun",
+                    journeyTitle: "Yolculuğumuz",
+                    addMemory: "+ Anı Ekle",
+                    quizTitle: "Aşk Testi",
+                    giftTitle: "Sana Bir Hediyem Var",
+                    tapOpen: "Açmak için dokun",
+                    bloomTitle: "Aşkımız Çiçek Açıyor",
+                    bloomMsg: "Mobilde cihazı salla veya aşağıdaki butona tıkla!",
+                    bloomBtn: "Çiçek Açtır 🌸",
+                    shareTitle: "Aşkımızı Paylaş",
+                    downloadBtn: "Kartı İndir 📸",
+                    footer: "AI Artisan tarafından ❤️ ile yapıldı",
+                    loading: "Sihir örülüyor...",
+                    timeFormat: "yıl ve %days% gün",
+                    timeline: [
+                        { title: "Tanışma", desc: "Dünyalarımızın çarpıştığı an.", icon: "✨" },
+                        { title: "İlk Randevu", desc: "Kelebekler ve bitmeyen sohbetler.", icon: "🥂" },
+                        { title: "Aşık Olmak", desc: "Aradığımın sen olduğunu anladığım an.", icon: "💘" },
+                        { title: "Bugün", desc: "Eşsiz hikayemizi kutluyoruz.", icon: "🌹" }
+                    ],
+                    questions: [
+                        { q: "Birlikte yapmayı en sevdiğiniz şey ne?", options: ["Seyahat", "Sarılmak", "Yemek", "Macera"] },
+                        { q: "Bizi en iyi anlatan kelime hangisi?", options: ["Tutkulu", "Şapşal", "Ruh İkizi", "Durdurulamaz"] },
+                        { q: "Hayalinizdeki randevu nerede?", options: ["Plaj", "Dağ", "Şehir", "Ev"] }
+                    ],
+                    poemTemplates: [
+                        "Kaosun ortasında, %p2% benim huzurum,\nRahatlatıcı bir melodi, şifalı bir merhem.\n%date% tarihinden beri kalbim biliyor,\nSeninle asla yalnız değilim.",
+                        "Güller kırmızı, menekşeler mavi,\nKimse beni %p2% gibi güldüremez.\n%p1% seni çok seviyor, hem de çok."
+                    ],
+                    quizResult: "Yıldızlarda yazılmış bir eşleşmesiniz! %100 Uyumlu."
+                }
+            };
+
+            // Initialization
+            init();
+
+            function init() {
+                const lang = navigator.language.startsWith('tr') ? 'tr' : 'en';
+                state.language = lang;
+                loadState();
+                setupEventListeners();
+                checkSetup();
+                applyLanguage();
+                initParticles();
+                initFlower();
+            }
+
+            function applyLanguage() {
+                const t = translations[state.language];
+                document.getElementById('setup-title').textContent = t.title;
+                document.querySelector('label[for="partner1"]').textContent = t.p1Label;
+                document.querySelector('label[for="partner2"]').textContent = t.p2Label;
+                document.querySelector('label[for="startDate"]').textContent = t.dateLabel;
+                document.querySelector('#setup-form button').textContent = t.btnCreate;
+                document.querySelector('#hero h1').textContent = t.heroTitle;
+                document.querySelector('#timeline h2').textContent = t.journeyTitle;
+                document.getElementById('add-memory-btn').textContent = t.addMemory;
+                document.querySelector('#quiz h2').textContent = t.quizTitle;
+                document.querySelector('#gift h2').textContent = t.giftTitle;
+                document.querySelector('.instruction').textContent = t.tapOpen;
+                document.querySelector('.bloom-msg h3').textContent = t.bloomTitle;
+                document.querySelector('.bloom-msg p').textContent = t.bloomMsg;
+                document.getElementById('bloom-btn').textContent = t.bloomBtn;
+                document.querySelector('#share h2').textContent = t.shareTitle;
+                document.getElementById('download-btn').textContent = t.downloadBtn;
+                document.querySelector('footer p').innerHTML = t.footer;
+                const loadText = document.getElementById('loading-text');
+                if (loadText) loadText.textContent = t.loading;
+            }
+
+            function loadState() {
+                const saved = JSON.parse(localStorage.getItem('vday_state'));
+                if (saved) {
+                    state.partner1 = saved.partner1;
+                    state.partner2 = saved.partner2;
+                    state.startDate = new Date(saved.startDate);
+                    state.theme = saved.theme || 'light';
+                }
+                applyTheme();
+            }
+
+            function saveState() {
+                localStorage.setItem('vday_state', JSON.stringify(state));
+            }
+
+            function checkSetup() {
+                if (state.partner1 && state.partner2 && state.startDate) {
+                    elements.setupModal.classList.remove('active');
+                    elements.app.classList.remove('hidden');
+                    startExperience();
+                } else {
+                    elements.setupModal.classList.add('active');
+                    const loadScreen = document.getElementById('loading-screen');
+                    if (loadScreen) loadScreen.style.display = 'none';
+                }
+            }
+
+            function setupEventListeners() {
+                elements.setupForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const p1 = document.getElementById('partner1').value;
+                    const p2 = document.getElementById('partner2').value;
+                    const date = document.getElementById('startDate').value;
+
+                    if (p1 && p2 && date) {
+                        state.partner1 = p1;
+                        state.partner2 = p2;
+                        state.startDate = new Date(date);
+                        saveState();
+
+                        // Transition
+                        elements.setupModal.style.opacity = '0';
+                        setTimeout(() => {
+                            elements.setupModal.classList.remove('active');
+                            elements.app.classList.remove('hidden');
+                            startExperience();
+                        }, 500);
+                    }
+                });
+
+                elements.themeToggle.addEventListener('click', () => {
+                    state.theme = state.theme === 'light' ? 'dark' : 'light';
+                    applyTheme();
+                    saveState();
+                });
+
+                elements.musicToggle.addEventListener('click', toggleMusic);
+
+                elements.giftBox.addEventListener('click', openGift);
+
+                elements.bloomBtn.addEventListener('click', triggerBloom);
+
+                // Shake detection for mobile
+                let lastX, lastY, lastZ;
+                let lastUpdate = 0;
+                window.addEventListener('devicemotion', (e) => {
+                    const current = e.accelerationIncludingGravity;
+                    if (!current) return;
+
+                    const time = new Date().getTime();
+                    if ((time - lastUpdate) > 100) {
+                        const diffTime = time - lastUpdate;
+                        lastUpdate = time;
+
+                        const speed = Math.abs(current.x + current.y + current.z - lastX - lastY - lastZ) / diffTime * 10000;
+
+                        if (speed > 800) { // Shake threshold
+                            triggerBloom();
+                        }
+
+                        lastX = current.x;
+                        lastY = current.y;
+                        lastZ = current.z;
+                    }
+                });
+
+                // Intersection Observer for Timeline
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                        }
+                    });
+                }, { threshold: 0.1 });
+
+                // Add dummy timeline items for observer to pick up later
+                setTimeout(() => {
+                    document.querySelectorAll('.timeline-item').forEach(item => observer.observe(item));
+                }, 100);
+            }
+
+            function applyTheme() {
+                document.documentElement.setAttribute('data-theme', state.theme);
+                elements.themeToggle.textContent = state.theme === 'light' ? '🌙' : '☀️';
+            }
+
+            function startExperience() {
+                // Hide loading
+                const loadScreen = document.getElementById('loading-screen');
+                if (loadScreen) {
+                    loadScreen.style.opacity = '0';
+                    setTimeout(() => loadScreen.remove(), 500);
+                }
+
+                // Set Texts
+                elements.coupleNames.textContent = `${state.partner1} & ${state.partner2}`;
+                updateTimeTogether();
+                setInterval(updateTimeTogether, 1000 * 60); // Update every minute
+
+                // Generate Content
+                generateTimeline();
+                initQuiz();
+                generatePoem();
+            }
+
+            function updateTimeTogether() {
+                if (!state.startDate) return;
+                const now = new Date();
+                const diff = now - state.startDate;
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const years = Math.floor(days / 365);
+                const remainingDays = days % 365;
+
+                const t = translations[state.language];
+                const timeStr = t.timeFormat.replace('%days%', remainingDays);
+                elements.timeTogether.textContent = `${years > 0 ? years + ' ' : ''}${timeStr}`;
+            }
+
+            // --- Timeline Generator ---
+            function generateTimeline() {
+                const t = translations[state.language];
+                elements.timelineList.innerHTML = '';
+                t.timeline.forEach((event, index) => {
+                    const div = document.createElement('div');
+                    div.className = 'timeline-item';
+                    div.style.transitionDelay = `${index * 0.2}s`;
+                    div.innerHTML = `
+                <h3>${event.icon} ${event.title}</h3>
+                <p>${event.desc}</p>
+            `;
+                    elements.timelineList.appendChild(div);
+                });
+            }
+
+            // --- Particle System (Hero) ---
+            function initParticles() {
+                const canvas = document.getElementById('heart-canvas');
+                if (!canvas) return;
+                const ctx = canvas.getContext('2d');
+                let width, height;
+                const particles = [];
+
+                function resize() {
+                    width = canvas.width = window.innerWidth;
+                    height = canvas.height = window.innerHeight;
+                }
+                window.addEventListener('resize', resize);
+                resize();
+
+                class Particle {
+                    constructor() {
+                        this.x = Math.random() * width;
+                        this.y = Math.random() * height;
+                        this.size = Math.random() * 15 + 5;
+                        this.speedY = Math.random() * 1 + 0.5;
+                        this.opacity = Math.random() * 0.5 + 0.1;
+                    }
+                    update() {
+                        this.y -= this.speedY;
+                        if (this.y < -50) this.y = height + 50;
+                    }
+                    draw() {
+                        ctx.globalAlpha = this.opacity;
+                        ctx.font = `${this.size}px serif`;
+                        ctx.fillStyle = '#fff';
+                        ctx.fillText('❤️', this.x, this.y);
+                    }
+                }
+
+                for (let i = 0; i < 50; i++) particles.push(new Particle());
+
+                function animate() {
+                    ctx.clearRect(0, 0, width, height);
+                    particles.forEach(p => {
+                        p.update();
+                        p.draw();
+                    });
+                    requestAnimationFrame(animate);
+                }
+                animate();
+            }
+
+            // --- Audio System (Web Audio API) ---
+            let audioCtx;
+
+            function toggleMusic() {
+                if (state.musicPlaying) {
+                    if (audioCtx) audioCtx.suspend();
+                    state.musicPlaying = false;
+                    elements.musicToggle.textContent = '🎵';
+                    elements.musicToggle.style.opacity = '0.7';
+                } else {
+                    if (!audioCtx) {
+                        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                        playMelody();
+                    } else {
+                        audioCtx.resume();
+                    }
+                    state.musicPlaying = true;
+                    elements.musicToggle.textContent = '⏸️';
+                    elements.musicToggle.style.opacity = '1';
+                }
+            }
+
+            function playMelody() {
+                // Simple generative melody
+                const notes = [261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88]; // C Major
+
+                function playNote() {
+                    if (!state.musicPlaying) return;
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+
+                    // Random pentatonic-ish selection
+                    const freq = notes[Math.floor(Math.random() * notes.length)];
+
+                    osc.frequency.value = freq;
+                    osc.type = 'sine';
+
+                    gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.5);
+
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 1.5);
+
+                    setTimeout(playNote, 400 + Math.random() * 1000);
+                }
+                playNote();
+            }
+
+            // --- Logic: Quiz & AI Poem ---
+            function initQuiz() {
+                const t = translations[state.language];
+                let currentQ = 0;
+
+                function showQuestion() {
+                    if (currentQ >= t.questions.length) {
+                        document.getElementById('quiz-question').textContent = "";
+                        document.getElementById('quiz-options').innerHTML = "";
+                        document.getElementById('quiz-result').textContent = t.quizResult;
+                        document.getElementById('quiz-result').classList.remove('hidden');
+                        return;
+                    }
+
+                    const q = t.questions[currentQ];
+                    document.getElementById('quiz-question').textContent = q.q;
+                    const opts = document.getElementById('quiz-options');
+                    opts.innerHTML = '';
+
+                    q.options.forEach(opt => {
+                        const btn = document.createElement('button');
+                        btn.className = 'quiz-option';
+                        btn.textContent = opt;
+                        btn.onclick = () => {
+                            currentQ++;
+                            showQuestion();
+                        };
+                        opts.appendChild(btn);
+                    });
+                }
+                showQuestion();
+            }
+
+            function generatePoem() {
+                const t = translations[state.language];
+                const template = t.poemTemplates[Math.floor(Math.random() * t.poemTemplates.length)];
+                let poem = template
+                    .replace('%p1%', state.partner1)
+                    .replace('%p2%', state.partner2)
+                    .replace('%date%', state.startDate ? state.startDate.toDateString() : '');
+
+                elements.aiPoem.innerHTML = poem.replace(/\n/g, '<br>');
+            }
+
+            function openGift() {
+                elements.giftBox.classList.toggle('open');
+            }
+
+            // --- Flower Bloom (Easter Egg) ---
+            function triggerBloom() {
+                elements.bloomSection.classList.remove('bloom-hidden');
+                elements.bloomSection.classList.add('bloom-active');
+                document.getElementById('bloom-btn').style.display = 'none'; // Hide button after trigger
+                drawFlower();
+            }
+
+            function drawFlower() {
+                const canvas = elements.flowerCanvas;
+                if (!canvas) return;
+                const ctx = canvas.getContext('2d');
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+
+                // Fractal Tree Logic
+                function drawBranch(startX, startY, len, angle, branchWidth) {
+                    ctx.beginPath();
+                    ctx.save();
+                    ctx.strokeStyle = '#4a0404'; // dark wood color
+                    ctx.fillStyle = '#ffc0cb'; // pink
+                    ctx.lineWidth = branchWidth;
+                    ctx.translate(startX, startY);
+                    ctx.rotate(angle * Math.PI / 180);
+                    ctx.moveTo(0, 0);
+                    ctx.lineTo(0, -len);
+                    ctx.stroke();
+
+                    if (len < 10) {
+                        // Leaf/Flower
+                        ctx.beginPath();
+                        ctx.arc(0, -len, 5, 0, Math.PI / 2);
+                        ctx.fill();
+                        ctx.restore();
+                        return;
+                    }
+
+                    drawBranch(0, -len, len * 0.75, angle + 15, branchWidth * 0.7);
+                    drawBranch(0, -len, len * 0.75, angle - 15, branchWidth * 0.7);
+
+                    ctx.restore();
+                }
+
+                // Start from bottom center
+                drawBranch(canvas.width / 2, canvas.height, 120, 0, 10);
+            }
+
+            // Share Button
+            const downloadBtn = document.getElementById('download-btn');
+            if (downloadBtn) {
+                downloadBtn.addEventListener('click', () => {
+                    if (navigator.share) {
+                        navigator.share({
+                            title: 'Our Love Story',
+                            text: `Check out the love story of ${state.partner1} & ${state.partner2}!`,
+                            url: window.location.href
+                        });
+                    } else {
+                        alert('URL copied to clipboard!');
+                        navigator.clipboard.writeText(window.location.href);
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
